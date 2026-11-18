@@ -50,10 +50,26 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Check application files
+      - name: Prepare web application
         run: |
+          mkdir -p www
+          test -f index.html
+          cp index.html www/index.html
+
+          for item in assets css js img images fonts; do
+            if [ -e "$item" ]; then
+              cp -a "$item" www/
+            fi
+          done
+
+          if [ -f icon-only.png ]; then
+            cp icon-only.png www/
+          fi
+
           test -f www/index.html
           test -f capacitor.config.json
+
+          echo "Web application successfully prepared"
 
       - name: Add Android platform
         run: |
